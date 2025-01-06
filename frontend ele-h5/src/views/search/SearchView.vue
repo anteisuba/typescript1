@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import OpSearch from '@/components/OpSearch.vue';
-import { ref,computed, watch } from 'vue';
+import { ref,computed, watch} from 'vue';
 import { fetchSearchData } from '@/api/search';
 import type { ISearchResult } from '@/types';
 import { useToggle } from '@/use/UseToggle';
+import { useDebounce } from '@/use/useDebounce';
 
     interface IEmits {
         (e:'cancel'):void
@@ -60,13 +61,45 @@ import { useToggle } from '@/use/UseToggle';
         onSearch(v)
     }
     //监视
-    watch(searchValue,(nv) => {
-        if(!nv) {
-            searchResult.value = []
-            return
-        }
-        onSearch(nv)
+    // const handleSearch = useDebounce<string>((value:string) => {
+    //     if(!value) {
+    //         searchResult.value = []
+    //         return
+    //     }
+    //     onSearch(value)
+    // },1000)
+    // watch(searchValue,(nv) => handleSearch(nv),{immediate:false})
+
+    // watch(
+    //     searchValue,
+    //     useDebounce((nv) => {
+    //         if(!nv) {
+    //             searchResult.value = []
+    //             return
+    //         }
+    //         onSearch(nv as string)
+    //     }, 1000)
+        
+    //     // (nv) => {
+    //     //     const debouncedFn = useDebounce<string>((value) => {
+    //     //         if(!value) {
+    //     //             searchResult.value = []
+    //     //             return
+    //     //         }
+    //     //         onSearch(value)
+    //     //     },1000)
+    //     //     debouncedFn(nv)
+    //     // }
+    // )
+    const debounceValue = useDebounce(searchValue,1000)
+    watch(debounceValue,(nv) => {
+                if(!nv) {
+                searchResult.value = []
+                return
+            }
+            onSearch(nv as string)
     })
+
 </script>
 
 <template>
@@ -106,7 +139,7 @@ import { useToggle } from '@/use/UseToggle';
                 >{{ v }}</div>
             </TransitionGroup>
             <!-- 箭头按钮 -->
-                <div class="toggle-btn" key="allow" @click="toggleHistoryTag">
+                <div class="toggle-btn" key="allow" @click="onToggleHistory">
                     <VanIcon 
                         :name="isHistoryTagShown ? 'arrow-up' : 'arrow-down'" 
                         :style="{ transform: isHistoryTagShown ? 'rotate(180deg)' : 'rotate(0deg)' }"

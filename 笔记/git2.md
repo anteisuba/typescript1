@@ -76,4 +76,21 @@ SearchView组件开发
 6-5:性能优化 useDebounce避免多次请求
     短时间内多次发送请求,造成返回结果的不正确
     发送无用请求,占用资源
+
+    解决抖动问题
+        将事件延迟执行
+            setTimeout
+        如果在这段时间内事件在被触发,则取消执行之前的事件   
+            使用变量标记触发状态    clearTimeout
+
+6-7 自定义hooks-useAsync实现请求处理
+
+    Promise then和catch处理
+    TS声明复杂的类型结构
+    使用jsonServer中间件延迟返回数据
+
+    需求分析:
+        新建fetchHomePageData的api
+        实现useAsync,将api包裹一层,处理Promise的状态
+
     
