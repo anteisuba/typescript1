@@ -5,7 +5,7 @@
     import SearchView from '@/views/search/SearchView.vue';
     import { useAsync } from '@/use/useAsync';
     import { fetchHomePageData } from '@/api/home';
-import type { IHomeInfo } from '@/types';
+    import type { IHomeInfo } from '@/types';
 
     const recomments = [
         {
